@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { useInView } from "react-intersection-observer";
 
 const skills = [
     // Frontend Skills
@@ -34,6 +35,11 @@ const categories = ["All", "Frontend", "Backend", "Tools", "Additional"];
 
 export const SkillsSection = () => {
 
+    const { ref, inView } = useInView({
+        triggerOnce: false, // animate evrytime it comes into viewport
+        threshold: 0.15,   // 15% of the section is visible
+    });
+
     const [activeCategory, setActiveCategory] = useState("All");
 
     const filteredSkills = skills.filter(
@@ -41,13 +47,13 @@ export const SkillsSection = () => {
     );
 
     return (
-        <section id="skills" className="py-24 px-4 relative bg-secondary/30">
+        <section id="skills" ref={ref} className="py-24 px-4 relative bg-secondary/30">
             <div className="container mx-auto max-w-5xl">
-                <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
+                <h2 className={`text-3xl md:text-4xl font-bold text-center mb-12 opacity-0 ${inView ? "animate-fade-in-up" : ""}`}>
                     My <span className="text-primary"> Skills </span>
                 </h2>
 
-                <div className="flex flex-wrap justify-center gap-4 mb-12">
+                <div className={`flex flex-wrap justify-center gap-4 mb-12 opacity-0 ${inView ? "animate-fade-in-up-delay-1" : ""}`}>
                     {categories.map((category, key) => (
                         <button 
                             key={key}
@@ -63,7 +69,7 @@ export const SkillsSection = () => {
                     ))}
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:gridd-cols-3 gap-6">
+                <div className={`grid grid-cols-1 sm:grid-cols-2 lg:gridd-cols-3 gap-6 opacity-0 ${inView ? "animate-fade-in-up-delay-2" : ""}`}>
                     {filteredSkills.map((skill, key) => (
                         <div key={key} className="bg-card p-6 rounded-lg shadow-xs card-hover">
                             <div className="text-left mb-4">

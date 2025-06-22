@@ -2,8 +2,14 @@ import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Send, Twitter } fro
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 // import { useState } from "react";
+import { useInView } from "react-intersection-observer";
 
 export const ContactSection = () => {
+
+    const { ref, inView } = useInView({
+        triggerOnce: false, // animate evrytime it comes into viewport
+        threshold: 0.15,   // 15% of the section is visible
+    });
 
     const {toast} = useToast();
 
@@ -25,13 +31,13 @@ export const ContactSection = () => {
     // };
 
     return (
-        <section id="contact" className="py-24 px-4 relative bg-secondary/30">
+        <section id="contact" ref={ref} className="py-24 px-4 relative bg-secondary/30">
             <div className="container mx-auto max-w-5xl">
-                <h2 className="text-3xl md:text-4xl font-bold mbb-4 text-center">
+                <h2 className={`text-3xl md:text-4xl font-bold mbb-4 text-center opacity-0 ${inView ? "animate-fade-in-up" : ""}`}>
                     Get In <span className="text-primary">Touch</span>
                 </h2>
 
-                <p className="text-center text-muted-foreground mb-12 maxx-w-2xl mx-auto">
+                <p className={`text-center text-muted-foreground mt-4 mb-12 maxx-w-2xl mx-auto opacity-0 ${inView ? "animate-fade-in-up" : ""}`}>
                     If you have any questions or would like to learn more about our services, please don't hesitate to reach out. I am here to help you with your development needs.
                 </p>
 
@@ -40,10 +46,12 @@ export const ContactSection = () => {
                     <div className="space-y-8">
                     {/* <div className="space-y-8 flex flex-col items-center justify-center h-full"> */}
                     {/* <div className="col-span-full flex flex-col items-center justify-center space-y-8"> if I want to keep grid column for form to use in future */}
-                        <h3 className="text-2xl font-semibold mb-6">Contact Information</h3>
+                        <h3 className={`text-2xl font-semibold mb-6 opacity-0 ${inView ? "animate-fade-in-up-delay-1" : ""}`}>
+                            Contact Information
+                        </h3>
 
                         <div className="space-y-6 justify-center">
-                            <div className="flex items-start space-x-4">
+                            <div className={`flex items-start space-x-4 opacity-0 ${inView ? "animate-fade-in-up-delay-2" : ""}`}>
                                 <div className="p-3 rounded-full bg-primary/10">
                                     <Mail className="h-6 w-6 text-primary"/>
                                 </div>
@@ -59,7 +67,7 @@ export const ContactSection = () => {
                                 </div>
                             </div>
 
-                            <div className="flex items-start space-x-4">
+                            <div className={`flex items-start space-x-4 opacity-0 ${inView ? "animate-fade-in-up-delay-3" : ""}`}>
                                 <div className="p-3 rounded-full bg-primary/10">
                                     <Phone className="h-6 w-6 text-primary"/>
                                 </div>
@@ -75,7 +83,7 @@ export const ContactSection = () => {
                                 </div>
                             </div>
 
-                            <div className="flex items-start space-x-4">
+                            <div className={`flex items-start space-x-4 opacity-0 ${inView ? "animate-fade-in-up-delay-4" : ""}`}>
                                 <div className="p-3 rounded-full bg-primary/10">
                                     <MapPin className="h-6 w-6 text-primary"/>
                                 </div>
@@ -91,7 +99,7 @@ export const ContactSection = () => {
                             </div>
                         </div>
 
-                        <div className="pt-8">
+                        <div className={`pt-8 opacity-0 ${inView ? "animate-fade-in-up-delay-5" : ""}`}>
                             <h4 className="font-medium mb-4">Connect With Me</h4>
                             <div className="flex space-x-4 justify-center">
                                 <a href="https://www.linkedin.com/in/harsh-sahu-b11650257/" target="_blank">
