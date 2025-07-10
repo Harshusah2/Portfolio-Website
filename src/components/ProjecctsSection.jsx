@@ -4,6 +4,16 @@ import { useInView } from "react-intersection-observer";
 const projects = [
     {
         id: 1,
+        title: "AIInterviewIQ",
+        description: "An AI Voice NewsMagzineagent integrated mock interview platform, that generates an interview and users can able to take interviews related to any field, that gives you feedback according to your interview. Currtently work is in progress on this project, almost 80% of project is completed.",
+        image: "projects/AIInterviewIQ.png",
+        tags: ["React.js", "Next.js", "Tailwind.css", "Typescript", "Vapi"],
+        demoURL: "#",
+        githubURL: "https://github.com/Harshusah2/Mock_Interview-Platform",
+    },
+
+    {
+        id: 2,
         title: "Marvelous Web App",
         description: "A music streaming web app that lets users search for and listen to music by converting YouTube videos into audio using video links. Built with React.js, Tailwind CSS, Node.js, Express, MongoDB, and YouTube Data API.",
         image: "projects/Marvelous.png",
@@ -13,7 +23,7 @@ const projects = [
     },
 
     {
-        id: 2,
+        id: 3,
         title: "Shopper Web App",
         description: "An e-commerce web app for clothing where users can add or remove items from their cart and browse by category. Built with React.js, CSS, Node.js, Express, and MongoDB for a seamless shopping experience.",
         image: "projects/Shopper_ECommerce.png",
@@ -23,7 +33,7 @@ const projects = [
     },
 
     {
-        id: 3,
+        id: 4,
         title: "NewsMagzine Web App",
         description: "A news web app that allows users to read the latest international news by category and visit full articles. Built using React.js, Bootstrap CSS, and News API for up-to-date and categorized news content.",
         image: "projects/NewsMagzine.png",

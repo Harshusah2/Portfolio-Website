@@ -10,12 +10,14 @@ const skills = [
     {name: "React Native", level: 75, category: "Frontend"},
     {name: "Tailwind CSS", level: 90, category: "Frontend"},
     {name: "Bootstrap CSS", level: 80, category: "Frontend"},
+    {name: "Next.js", level: 70, category: "Frontend"},
 
     // Backend Skills
     {name: "Node.js", level: 85, category: "Backend"},
     {name: "Express", level: 85, category: "Backend"},
     {name: "MongoDB", level: 90, category: "Backend"},
     {name: "Firebase", level: 70, category: "Backend"},
+    {name: "TypeScript", level: 60, category: "Backend"},
 
     // Tools and Technologies
     {name: "Git/GitHub", level: 75, category: "Tools"},
@@ -24,6 +26,8 @@ const skills = [
     {name: "VS Code", level: 90, category: "Tools"},
     {name: "Android Studio", level: 80, category: "Tools"},
     {name: "PostMan", level: 70, category: "Tools"},
+    {name: "Vapi", level: 70, category: "Tools"},
+    
 
     // Additional Skills
     {name: "Kali Linux", level: 60, category: "Additional"},
