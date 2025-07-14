@@ -5,7 +5,7 @@ const projects = [
     {
         id: 1,
         title: "AIInterviewIQ",
-        description: "An AI Voice NewsMagzineagent integrated mock interview platform, that generates an interview and users can able to take interviews related to any field, that gives you feedback according to your interview. Currtently work is in progress on this project, almost 80% of project is completed.",
+        description: "An AI Voice NewsMagzineagent integrated mock interview platform, that generates an interview and users can able to take interviews related to any field, that gives you feedback according to your interview.",
         image: "projects/AIInterviewIQ.png",
         tags: ["React.js", "Next.js", "Tailwind.css", "Typescript", "Vapi"],
         demoURL: "#",
