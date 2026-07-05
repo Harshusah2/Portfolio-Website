@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 import { Moon, Sun } from "lucide-react"
-import { cn } from "@/lib/utils";
 
 export const ThemeToggle = () => {
 
@@ -39,15 +38,20 @@ export const ThemeToggle = () => {
     return (
         <button 
             onClick={toggleTheme} 
-            className={cn(
-                "fixed max-sm:right-0 max-sm:top-0 top-1 right-5 z-50 p-2 rounded-full transition-colors duration-300",
-                "focus:outline-hidden"
-            )}
+            aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
+            className="w-9 h-9 flex items-center justify-center rounded-full transition-all duration-200 cursor-pointer"
+            style={{
+                background: "rgba(108,99,255,0.1)",
+                border: "1px solid var(--c-border)",
+                color: isDarkMode ? "#f59e0b" : "#6C63FF",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(108,99,255,0.2)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(108,99,255,0.1)"; }}
         >
             {isDarkMode ? (
-                <Sun className="h-6 w-6 text-yellow-300"/>
+                <Sun size={16} />
             ) : (
-                <Moon className="h-6 w-6 text-blue-900"/>
+                <Moon size={16} />
             )} 
         </button>
     );
