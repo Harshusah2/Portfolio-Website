@@ -1,4 +1,4 @@
-import { ArrowUp, Github, Instagram, Linkedin, Mail } from "lucide-react";
+import { Github, Instagram, Linkedin, Mail } from "lucide-react";
 
 const LINKS = [
   { label: "Home", href: "#hero" },
@@ -16,8 +16,6 @@ const SOCIALS = [
   { icon: Mail, href: "mailto:harshsahu180407@gmail.com", label: "Email", color: "#00D4FF" },
 ];
 
-const scrollToTop = () =>
-  window.scrollTo({ top: 0, behavior: "smooth" });
 
 export const Footer = () => (
   <footer
@@ -152,36 +150,12 @@ export const Footer = () => (
 
       {/* Bottom bar */}
       <div
-        className="flex flex-wrap items-center justify-between gap-4 pt-6"
+        className="pt-6 text-center"
         style={{ borderTop: "1px solid var(--c-border)" }}
       >
         <p style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: "0.78rem", color: "var(--c-text-subtle)" }}>
           &copy; {new Date().getFullYear()} Harsh Sahu. All rights reserved.
         </p>
-
-        {/* ─── Scroll-to-top button (smooth scroll via JS) ─── */}
-        <button
-          onClick={scrollToTop}
-          aria-label="Back to top"
-          className="p-2.5 rounded-full transition-all duration-300 cursor-pointer"
-          style={{
-            background: "rgba(108,99,255,0.1)",
-            border: "1px solid rgba(108,99,255,0.28)",
-            color: "#6C63FF",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "rgba(108,99,255,0.25)";
-            e.currentTarget.style.boxShadow = "0 0 20px rgba(108,99,255,0.45)";
-            e.currentTarget.style.transform = "translateY(-3px)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "rgba(108,99,255,0.1)";
-            e.currentTarget.style.boxShadow = "";
-            e.currentTarget.style.transform = "";
-          }}
-        >
-          <ArrowUp size={18} />
-        </button>
       </div>
     </div>
   </footer>

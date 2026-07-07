@@ -1,15 +1,16 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { ArrowUp } from "lucide-react";
 
 /* ── Config ────────────────────────────────────────────────────────────────── */
-const WHATSAPP_NUMBER = "+919098352698"; // e.g. 919876543210 for +91 98765 43210
+const WHATSAPP_NUMBER = "+919098352698";
 const ENQUIRY_TEXT = encodeURIComponent(
   "Hello Harsh! I visited your portfolio and I have an enquiry regarding your services."
 );
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${ENQUIRY_TEXT}`;
 
 /* ── WhatsApp SVG icon ─────────────────────────────────────────────────────── */
-const WhatsAppIcon = ({ size = 28 }) => (
+const WhatsAppIcon = ({ size = 26 }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}
@@ -25,67 +26,109 @@ const WhatsAppIcon = ({ size = 28 }) => (
 /* ── Main component ─────────────────────────────────────────────────────────── */
 export const WhatsAppButton = () => {
   const [showTooltip, setShowTooltip] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  // Show scroll-to-top only after scrolling down 300px
+  useEffect(() => {
+    const onScroll = () => setShowScrollTop(window.scrollY > 300);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
-    <div
-      className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2"
-      onMouseEnter={() => setShowTooltip(true)}
-      onMouseLeave={() => setShowTooltip(false)}
-    >
-      {/* Tooltip */}
+    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-center gap-3">
+
+      {/* ── Scroll-to-top button ── */}
       <AnimatePresence>
-        {showTooltip && (
-          <motion.div
-            initial={{ opacity: 0, y: 6, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 6, scale: 0.9 }}
-            transition={{ duration: 0.18, ease: "easeOut" }}
-            className="px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap pointer-events-none"
+        {showScrollTop && (
+          <motion.button
+            onClick={scrollToTop}
+            aria-label="Scroll to top"
+            className="w-11 h-11 rounded-full flex items-center justify-center cursor-pointer"
             style={{
-              fontFamily: "'Space Grotesk', sans-serif",
-              background: "rgba(18,18,28,0.92)",
-              border: "1px solid rgba(37,211,102,0.35)",
-              color: "#25D366",
-              boxShadow: "0 4px 20px rgba(0,0,0,0.35)",
-              backdropFilter: "blur(12px)",
+              background: "rgba(108,99,255,0.15)",
+              border: "1px solid rgba(108,99,255,0.4)",
+              color: "#6C63FF",
+              boxShadow: "0 4px 20px rgba(108,99,255,0.2)",
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
             }}
+            initial={{ opacity: 0, scale: 0.6, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.6, y: 10 }}
+            transition={{ type: "spring", stiffness: 300, damping: 22 }}
+            whileHover={{
+              scale: 1.12,
+              background: "rgba(108,99,255,0.28)",
+              boxShadow: "0 0 22px rgba(108,99,255,0.5)",
+            }}
+            whileTap={{ scale: 0.92 }}
           >
-            💬 Chat on WhatsApp
-          </motion.div>
+            <ArrowUp size={18} />
+          </motion.button>
         )}
       </AnimatePresence>
 
-      {/* Button */}
-      <motion.a
-        href={WHATSAPP_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Chat with Harsh on WhatsApp"
-        className="relative w-14 h-14 rounded-full flex items-center justify-center text-white"
-        style={{
-          background: "linear-gradient(135deg, #25D366, #128C7E)",
-          boxShadow: "0 4px 24px rgba(37,211,102,0.45), 0 2px 8px rgba(0,0,0,0.2)",
-        }}
-        initial={{ scale: 0, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ type: "spring", stiffness: 260, damping: 20, delay: 1.2 }}
-        whileHover={{
-          scale: 1.12,
-          boxShadow: "0 6px 36px rgba(37,211,102,0.65), 0 2px 12px rgba(0,0,0,0.25)",
-        }}
-        whileTap={{ scale: 0.94 }}
+      {/* ── WhatsApp button ── */}
+      <div
+        onMouseEnter={() => setShowTooltip(true)}
+        onMouseLeave={() => setShowTooltip(false)}
+        className="relative flex flex-col items-end gap-2"
       >
-        {/* Ping ring animation */}
-        <span
-          className="absolute inset-0 rounded-full animate-ping"
+        {/* Tooltip */}
+        <AnimatePresence>
+          {showTooltip && (
+            <motion.div
+              initial={{ opacity: 0, x: 8, scale: 0.9 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              exit={{ opacity: 0, x: 8, scale: 0.9 }}
+              transition={{ duration: 0.18, ease: "easeOut" }}
+              className="absolute right-16 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap pointer-events-none"
+              style={{
+                fontFamily: "'Space Grotesk', sans-serif",
+                background: "rgba(18,18,28,0.92)",
+                border: "1px solid rgba(37,211,102,0.35)",
+                color: "#25D366",
+                boxShadow: "0 4px 20px rgba(0,0,0,0.35)",
+                backdropFilter: "blur(12px)",
+              }}
+            >
+              💬 Chat on WhatsApp
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* WhatsApp button */}
+        <motion.a
+          href={WHATSAPP_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Chat with Harsh on WhatsApp"
+          className="relative w-14 h-14 rounded-full flex items-center justify-center text-white"
           style={{
-            background: "rgba(37,211,102,0.28)",
-            animationDuration: "2.2s",
+            background: "linear-gradient(135deg, #25D366, #128C7E)",
+            boxShadow: "0 4px 24px rgba(37,211,102,0.45), 0 2px 8px rgba(0,0,0,0.2)",
           }}
-          aria-hidden
-        />
-        <WhatsAppIcon size={26} />
-      </motion.a>
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 260, damping: 20, delay: 1.2 }}
+          whileHover={{
+            scale: 1.12,
+            boxShadow: "0 6px 36px rgba(37,211,102,0.65), 0 2px 12px rgba(0,0,0,0.25)",
+          }}
+          whileTap={{ scale: 0.94 }}
+        >
+          {/* Ping ring */}
+          <span
+            className="absolute inset-0 rounded-full animate-ping"
+            style={{ background: "rgba(37,211,102,0.28)", animationDuration: "2.2s" }}
+            aria-hidden
+          />
+          <WhatsAppIcon size={26} />
+        </motion.a>
+      </div>
     </div>
   );
 };
