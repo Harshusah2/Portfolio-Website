@@ -21,10 +21,61 @@ const TECH_BADGES = [
 ];
 
 const STATS = [
-  { icon: Code2, value: "1+", label: "Years Exp." },
-  { icon: Smartphone, value: "10+", label: "Projects" },
-  { icon: Shield, value: "4★", label: "Avg Rating" },
+  { icon: Code2, num: 1, suffix: "+", label: "Years Exp." },
+  { icon: Smartphone, num: 10, suffix: "+", label: "Projects" },
+  { icon: Shield, num: 4, suffix: "★", label: "Avg Rating" },
 ];
+
+/* ── Availability Badge Config ─────────────────────────────────────────────── */
+// Change VITE_AVAILABILITY in Vercel env vars to update the badge instantly
+// without touching any code. Options: "fulltime" | "freelance" | "busy"
+const AVAILABILITY_CONFIG = {
+  fulltime: {
+    label: "Open to Full-Time Roles",
+    dot: "#10B981",
+    bg: "linear-gradient(135deg, rgba(16,185,129,0.12), rgba(5,150,105,0.08))",
+    border: "rgba(16,185,129,0.35)",
+    color: "#10B981",
+    pulse: true,
+  },
+  freelance: {
+    label: "Available for Freelance",
+    dot: "#00D4FF",
+    bg: "linear-gradient(135deg, rgba(0,212,255,0.12), rgba(108,99,255,0.1))",
+    border: "rgba(0,212,255,0.3)",
+    color: "#00D4FF",
+    pulse: true,
+  },
+  busy: {
+    label: "Currently Unavailable",
+    dot: "#F97316",
+    bg: "linear-gradient(135deg, rgba(249,115,22,0.1), rgba(234,88,12,0.06))",
+    border: "rgba(249,115,22,0.28)",
+    color: "#F97316",
+    pulse: false,
+  },
+};
+
+const STATUS_KEY = (import.meta.env.VITE_AVAILABILITY || "freelance").toLowerCase();
+const AVAIL = AVAILABILITY_CONFIG[STATUS_KEY] ?? AVAILABILITY_CONFIG.freelance;
+
+/* ── Count-up hook ─────────────────────────────────────────────────────────── */
+const useCountUp = (end, duration = 1500, active = true) => {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    if (!active) { setCount(0); return; }
+    let start = null;
+    const step = (ts) => {
+      if (!start) start = ts;
+      const progress = Math.min((ts - start) / duration, 1);
+      // ease-out cubic
+      setCount(Math.floor(end * (1 - Math.pow(1 - progress, 3))));
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [end, duration, active]);
+  return count;
+};
 
 /* ── 3-D Floating Code Window ──────────────────────────────────────────────── */
 const CodeWindow = () => {
@@ -99,6 +150,29 @@ const CodeWindow = () => {
   );
 };
 
+/* ── Animated Stat Card ────────────────────────────────────────────────────── */
+const StatCard = ({ icon: Icon, num, suffix, label, active }) => {
+  const count = useCountUp(num, 1500, active);
+  return (
+    <div className="flex flex-col items-start gap-0.5">
+      <div className="flex items-center gap-1.5">
+        <Icon size={14} style={{ color: "#6C63FF" }} />
+        <span
+          className="text-2xl font-black"
+          style={{ fontFamily: "'Archivo', sans-serif", color: "#6C63FF", textShadow: "0 0 15px rgba(108,99,255,0.6)" }}
+        >
+          {count}{suffix}
+        </span>
+      </div>
+      <span
+        style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: "0.7rem", color: "var(--c-text-subtle)", textTransform: "uppercase", letterSpacing: "0.1em" }}
+      >
+        {label}
+      </span>
+    </div>
+  );
+};
+
 export const HeroSection = () => {
   const { ref, inView } = useInView({ triggerOnce: false, threshold: 0.1 });
   const [roleIndex, setRoleIndex] = useState(0);
@@ -133,7 +207,7 @@ export const HeroSection = () => {
           {/* ── Left ── */}
           <div className="text-left space-y-6">
 
-            {/* Available badge */}
+            {/* Availability badge — driven by VITE_AVAILABILITY env var */}
             <div className={`opacity-0 ${inView ? "animate-fade-in-up" : ""}`}>
               <span
                 className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold"
@@ -141,13 +215,20 @@ export const HeroSection = () => {
                   fontFamily: "'Space Grotesk', sans-serif",
                   letterSpacing: "0.15em",
                   textTransform: "uppercase",
-                  background: "linear-gradient(135deg, rgba(0,212,255,0.12), rgba(108,99,255,0.1))",
-                  border: "1px solid rgba(0,212,255,0.3)",
-                  color: "#00D4FF",
+                  background: AVAIL.bg,
+                  border: `1px solid ${AVAIL.border}`,
+                  color: AVAIL.color,
                 }}
               >
-                <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: "#00D4FF", boxShadow: "0 0 8px #00D4FF" }} />
-                Available for freelance
+                <span
+                  className={`w-2 h-2 rounded-full ${AVAIL.pulse ? "animate-pulse" : ""}`}
+                  style={{
+                    background: AVAIL.dot,
+                    boxShadow: `0 0 8px ${AVAIL.dot}`,
+                    opacity: AVAIL.pulse ? 1 : 0.7,
+                  }}
+                />
+                {AVAIL.label}
               </span>
             </div>
 
@@ -242,18 +323,8 @@ export const HeroSection = () => {
 
             {/* Stats */}
             <div className={`flex gap-8 opacity-0 ${inView ? "animate-fade-in-up-delay-6" : ""}`}>
-              {STATS.map(({ icon: Icon, value, label }) => (
-                <div key={label} className="flex flex-col items-start gap-0.5">
-                  <div className="flex items-center gap-1.5">
-                    <Icon size={14} style={{ color: "#6C63FF" }} />
-                    <span className="text-2xl font-black" style={{ fontFamily: "'Archivo', sans-serif", color: "#6C63FF", textShadow: "0 0 15px rgba(108,99,255,0.6)" }}>
-                      {value}
-                    </span>
-                  </div>
-                  <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: "0.7rem", color: "var(--c-text-subtle)", textTransform: "uppercase", letterSpacing: "0.1em" }}>
-                    {label}
-                  </span>
-                </div>
+              {STATS.map(({ icon: Icon, num, suffix, label }) => (
+                <StatCard key={label} icon={Icon} num={num} suffix={suffix} label={label} active={inView} />
               ))}
             </div>
           </div>

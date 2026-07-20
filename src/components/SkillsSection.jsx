@@ -19,7 +19,7 @@ const SKILLS = [
   { name: "Figma", level: 95, category: "Tools", color: "#F24E1E" },
   { name: "Adobe XD", level: 70, category: "Tools", color: "#FF61F6" },
   { name: "VS Code", level: 90, category: "Tools", color: "#007ACC" },
-  { name: "Antigravity", level: 90, category: "Tools", color: "#007ACC" },
+  { name: "Claude Code / Antigravity", level: 90, category: "Tools", color: "#007ACC" },
   { name: "Android Studio", level: 80, category: "Tools", color: "#3DDC84" },
   { name: "Postman", level: 70, category: "Tools", color: "#FF6C37" },
   { name: "Vapi", level: 70, category: "Tools", color: "#7c3aed" },

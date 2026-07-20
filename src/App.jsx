@@ -1,18 +1,19 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
-import { Home } from "./pages/Home"
-import { NotFound } from "./pages/NotFound"
-import {Toaster} from "@/components/ui/toaster"
+import { Home }      from "./pages/Home"
+import { NotFound }  from "./pages/NotFound"
+import { AdminPage } from "./pages/AdminPage"
+import { Toaster }   from "@/components/ui/toaster"
 
 function App() {
-
   return (
     <>
-    <Toaster />
+      <Toaster />
       <BrowserRouter>
-      <Routes>
-        <Route index element={<Home />}/>
-        <Route path="*" element={<NotFound />}/>
-      </Routes>
+        <Routes>
+          <Route index element={<Home />} />
+          <Route path="/admin" element={<AdminPage />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
       </BrowserRouter>
     </>
   )

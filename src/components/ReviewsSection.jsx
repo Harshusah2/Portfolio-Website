@@ -295,14 +295,29 @@ export const ReviewsSection = () => {
       .finally(() => setLoading(false));
   }, []);
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    // Check if screen is mobile (< 768px)
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile(); // Check on mount
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   const avgRating = reviews.length > 0
     ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1)
     : null;
 
-  // Need at least 2 items to duplicate for seamless loop; pad if needed
-  const loopReviews = reviews.length > 0
-    ? (reviews.length < 4 ? [...reviews, ...reviews, ...reviews] : reviews)
-    : [];
+  // Mobile: allow marquee if > 1 review. Desktop: allow if >= 4 reviews.
+  const hasEnoughForMarquee = isMobile ? reviews.length > 1 : reviews.length >= 4;
+
+  // If using marquee with < 4 items (e.g., 2 items on mobile), we must clone them 
+  // so the scrolling track is physically wide enough to loop without gaps.
+  let marqueeReviews = reviews;
+  if (hasEnoughForMarquee && reviews.length < 4) {
+    marqueeReviews = [...reviews, ...reviews, ...reviews].slice(0, 4);
+  }
 
   return (
     <section id="reviews" className="py-28 relative overflow-hidden">
@@ -371,15 +386,23 @@ export const ReviewsSection = () => {
         </div>
       )}
 
-      {!loading && loopReviews.length > 0 && (
+      {!loading && reviews.length > 0 && (
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={viewport}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="px-4"
+          className={hasEnoughForMarquee ? "px-4" : "container mx-auto max-w-6xl px-4"}
         >
-          <InfiniteMarquee reviews={loopReviews} />
+          {hasEnoughForMarquee ? (
+            <InfiniteMarquee reviews={marqueeReviews} />
+          ) : (
+            <div className="flex flex-wrap justify-center gap-5 pb-4">
+              {reviews.map((review, i) => (
+                <ReviewCard key={review._id || i} review={review} index={i} />
+              ))}
+            </div>
+          )}
         </motion.div>
       )}
 

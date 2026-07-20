@@ -23,15 +23,71 @@ const WhatsAppIcon = ({ size = 26 }) => (
   </svg>
 );
 
+/* ── Circular progress ring ─────────────────────────────────────────────────── */
+// Drawn with SVG stroke-dashoffset trick.
+// progress: 0 = empty, 1 = full circle (clockwise).
+const RADIUS = 20;          // must match the button's visual radius (44px / 2 - 2px gap)
+const CIRCUMFERENCE = 2 * Math.PI * RADIUS; // ≈ 125.66
+
+const ProgressRing = ({ progress }) => {
+  // dashoffset goes from CIRCUMFERENCE (0%) → 0 (100%) as progress rises
+  const offset = CIRCUMFERENCE * (1 - progress);
+
+  return (
+    <svg
+      width="48"
+      height="48"
+      viewBox="0 0 48 48"
+      className="absolute inset-0 pointer-events-none"
+      style={{ transform: "rotate(-90deg)" }} // start from top (12 o'clock)
+      aria-hidden
+    >
+      {/* Dim track ring */}
+      <circle
+        cx="24" cy="24" r={RADIUS}
+        fill="none"
+        stroke="rgba(108,99,255,0.15)"
+        strokeWidth="2.5"
+      />
+      {/* Animated progress arc */}
+      <circle
+        cx="24" cy="24" r={RADIUS}
+        fill="none"
+        stroke="url(#scrollGradient)"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeDasharray={CIRCUMFERENCE}
+        strokeDashoffset={offset}
+        style={{ transition: "stroke-dashoffset 0.12s linear" }}
+      />
+      <defs>
+        <linearGradient id="scrollGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%"   stopColor="#6C63FF" />
+          <stop offset="100%" stopColor="#00D4FF" />
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+};
+
 /* ── Main component ─────────────────────────────────────────────────────────── */
 export const WhatsAppButton = () => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
-  // Show scroll-to-top only after scrolling down 300px
   useEffect(() => {
-    const onScroll = () => setShowScrollTop(window.scrollY > 300);
+    const onScroll = () => {
+      const scrolled = window.scrollY;
+      const total    = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = total > 0 ? Math.min(scrolled / total, 1) : 0;
+
+      setShowScrollTop(scrolled > 300);
+      setScrollProgress(progress);
+    };
+
     window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll(); // initialise on mount
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
@@ -46,26 +102,29 @@ export const WhatsAppButton = () => {
           <motion.button
             onClick={scrollToTop}
             aria-label="Scroll to top"
-            className="w-11 h-11 rounded-full flex items-center justify-center cursor-pointer"
+            className="relative w-12 h-12 rounded-full flex items-center justify-center cursor-pointer"
             style={{
-              background: "rgba(108,99,255,0.15)",
-              border: "1px solid rgba(108,99,255,0.4)",
+              background: "rgba(108,99,255,0.12)",
               color: "#6C63FF",
               boxShadow: "0 4px 20px rgba(108,99,255,0.2)",
               backdropFilter: "blur(10px)",
               WebkitBackdropFilter: "blur(10px)",
+              border: "none",       // border replaced by ProgressRing SVG
             }}
             initial={{ opacity: 0, scale: 0.6, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
+            animate={{ opacity: 1, scale: 1,   y: 0  }}
             exit={{ opacity: 0, scale: 0.6, y: 10 }}
             transition={{ type: "spring", stiffness: 300, damping: 22 }}
             whileHover={{
-              scale: 1.12,
-              background: "rgba(108,99,255,0.28)",
-              boxShadow: "0 0 22px rgba(108,99,255,0.5)",
+              scale: 1.1,
+              background: "rgba(108,99,255,0.22)",
+              boxShadow: "0 0 24px rgba(108,99,255,0.45)",
             }}
             whileTap={{ scale: 0.92 }}
           >
+            {/* Circular scroll-progress ring */}
+            <ProgressRing progress={scrollProgress} />
+
             <ArrowUp size={18} />
           </motion.button>
         )}

@@ -3,6 +3,7 @@ import { Github, Instagram, Linkedin, Mail } from "lucide-react";
 const LINKS = [
   { label: "Home", href: "#hero" },
   { label: "About", href: "#about" },
+  { label: "Experience", href: "#experience" },
   { label: "Skills", href: "#skills" },
   { label: "Projects", href: "#projects" },
   { label: "Reviews", href: "#reviews" },

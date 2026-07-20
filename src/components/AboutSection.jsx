@@ -173,7 +173,7 @@ export const AboutSection = () => {
         </div>
 
         {/* Stats */}
-        <div className={`grid grid-cols-3 gap-4 ${anim("5")}`}>
+        <div className={`grid grid-cols-1 md:grid-cols-3 gap-4 ${anim("5")}`}>
           {STATS.map(({ icon: Icon, value, label }) => (
             <div
               key={label}
